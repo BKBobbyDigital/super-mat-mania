@@ -87,6 +87,7 @@ export default function App() {
   const navItems = [
     { key: "leaderboard", label: "Leaderboard" },
     { key: "scoring", label: "Scoring" },
+    { key: "payout", label: "Payout" },
     // { key: "addPick", label: "Add Entry" },
     ...(adminMode ? [{ key: "admin", label: "⚡ Admin" }] : []),
   ];
@@ -132,6 +133,7 @@ export default function App() {
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "32px 24px", flex: 1, width: "100%" }}>
         {view === "leaderboard" && <Leaderboard leaderboard={leaderboard} entries={entries} setEntries={setEntries} results={results} />}
         {view === "scoring" && <ScoringPage />}
+        {view === "payout" && <PayoutPage entries={entries} leaderboard={leaderboard} />}
         {view === "addPick" && <AddEntry entries={entries} setEntries={setEntries} onDone={() => setView("leaderboard")} />}
         {view === "admin" && adminMode && <AdminPanel entries={entries} results={results} setResults={setResults} />}
       </main>
@@ -383,7 +385,7 @@ function ScoringPage() {
               ["Tech Fall (with nearfall)", "1.5", "1.5"],
               ["Tech Fall (no nearfall)", "1.0", "1.0"],
               ["Major Decision", "1.0", "1.0"],
-              ["Bye", "1.0 / 0.5", "0.5"],
+              ["Bye", "1.0", "0.5"],
             ].map(([type, champ, consi], i) => (
               <tr key={i} style={{ borderBottom: "1px solid #f3f4f6" }}>
                 <td style={{ padding: "12px", color: "#374151", fontWeight: 500 }}>{type}</td>
@@ -444,6 +446,110 @@ function ScoringPage() {
         fontSize: 14, color: "#6b7280", textAlign: "center", border: "1px solid #e5e7eb",
       }}>
         <span style={{ fontWeight: 700 }}>Total Score</span> = sum of all 10 picks' (advancement + placement points)
+      </div>
+    </div>
+  );
+}
+
+// ─── Payout Page ────────────────────────────────────────────────────────────
+function PayoutPage({ entries, leaderboard }) {
+  const entryFee = 20;
+  const totalEntries = entries.length;
+  const totalPot = totalEntries * entryFee;
+  const first = Math.round(totalPot * 0.75);
+  const second = Math.round(totalPot * 0.15);
+  const third = Math.round(totalPot * 0.10);
+
+  const podium = [
+    { place: "1st", pct: "75%", amount: first, color: "#FFD700", icon: "🥇", leader: leaderboard[0] },
+    { place: "2nd", pct: "15%", amount: second, color: "#C0C0C0", icon: "🥈", leader: leaderboard[1] },
+    { place: "3rd", pct: "10%", amount: third, color: "#CD7F32", icon: "🥉", leader: leaderboard[2] },
+  ];
+
+  return (
+    <div style={{ maxWidth: 640, margin: "0 auto" }}>
+      {/* Prize Pool Header */}
+      <div style={{
+        background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)",
+        borderRadius: 16, padding: "36px 28px", marginBottom: 20, textAlign: "center",
+        border: "1px solid #333",
+      }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "#00d26a", letterSpacing: 2, marginBottom: 8, textTransform: "uppercase" }}>
+          Total Prize Pool
+        </div>
+        <div style={{ fontSize: 56, fontWeight: 900, color: "#fff", lineHeight: 1, marginBottom: 8, fontFamily: "'Barlow Condensed', sans-serif" }}>
+          ${totalPot.toLocaleString()}
+        </div>
+        <div style={{ fontSize: 14, color: "#6b7280" }}>
+          {totalEntries} entries × ${entryFee} per entry
+        </div>
+      </div>
+
+      {/* Podium Cards */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24 }}>
+        {podium.map(({ place, pct, amount, color, icon, leader }) => (
+          <div key={place} style={{
+            background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14,
+            padding: "20px 24px", display: "flex", alignItems: "center", gap: 16,
+            borderLeft: `5px solid ${color}`,
+          }}>
+            <div style={{ fontSize: 36, lineHeight: 1 }}>{icon}</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 2 }}>
+                <span style={{ fontWeight: 800, fontSize: 18, color: "#1a1a1a" }}>{place} Place</span>
+                <span style={{ fontSize: 13, color: "#9ca3af", fontWeight: 500 }}>{pct} of pool</span>
+              </div>
+              <div style={{ fontWeight: 900, fontSize: 32, color: "#00d26a", lineHeight: 1.1, fontFamily: "'Barlow Condensed', sans-serif" }}>
+                ${amount.toLocaleString()}
+              </div>
+              {leader && (
+                <div style={{ fontSize: 13, color: "#6b7280", marginTop: 6, fontWeight: 500 }}>
+                  Current leader: <span style={{ color: "#1a1a1a", fontWeight: 700 }}>{leader.name}</span>
+                  <span style={{ color: "#9ca3af" }}> ({leader.points} pts)</span>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Breakdown */}
+      <div style={{
+        background: "#fafafa", border: "1px solid #e5e7eb", borderRadius: 12, padding: 24,
+      }}>
+        <h3 style={{ fontWeight: 700, fontSize: 16, color: "#1a1a1a", marginBottom: 16 }}>Payout Breakdown</h3>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+          <thead>
+            <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+              <th style={{ textAlign: "left", padding: "10px 12px", color: "#9ca3af", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Place</th>
+              <th style={{ textAlign: "center", padding: "10px 12px", color: "#9ca3af", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Share</th>
+              <th style={{ textAlign: "right", padding: "10px 12px", color: "#9ca3af", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Payout</th>
+            </tr>
+          </thead>
+          <tbody>
+            {podium.map(({ place, pct, amount }, i) => (
+              <tr key={i} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                <td style={{ padding: "12px", fontWeight: 600, color: "#374151" }}>{place}</td>
+                <td style={{ padding: "12px", textAlign: "center", color: "#6b7280" }}>{pct}</td>
+                <td style={{ padding: "12px", textAlign: "right", fontWeight: 800, color: "#00d26a", fontSize: 16 }}>${amount.toLocaleString()}</td>
+              </tr>
+            ))}
+            <tr style={{ borderTop: "2px solid #e5e7eb" }}>
+              <td style={{ padding: "12px", fontWeight: 700, color: "#1a1a1a" }}>Total</td>
+              <td style={{ padding: "12px", textAlign: "center", color: "#6b7280" }}>100%</td>
+              <td style={{ padding: "12px", textAlign: "right", fontWeight: 800, color: "#1a1a1a", fontSize: 16 }}>${totalPot.toLocaleString()}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Fun note */}
+      <div style={{
+        marginTop: 16, background: "#f0fdf4", borderRadius: 10, padding: "14px 20px",
+        fontSize: 13, color: "#15803d", textAlign: "center", border: "1px solid #bbf7d0",
+        fontWeight: 600,
+      }}>
+        Winner takes the lion's share. Good luck, gentlemen.
       </div>
     </div>
   );
