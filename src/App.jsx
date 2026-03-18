@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { WEIGHT_CLASSES, WRESTLERS_BY_WEIGHT, PLACEMENT_POINTS, SEED_ENTRIES, getSchoolColor, LAST_UPDATED } from "./data";
+import { saveResults, subscribeResults } from "./firebase";
 
 // ─── Scoring helper ──────────────────────────────────────────────────────────
 function calcTeamPoints(picks, results) {
@@ -58,9 +59,29 @@ export default function App() {
   const [results, setResults] = useState(() => {
     try { return JSON.parse(localStorage.getItem("ncaa_wres_results") || "{}"); } catch { return {}; }
   });
+  const firebaseReady = useRef(false);
+
+  // Subscribe to Firebase results — all users get real-time updates
+  useEffect(() => {
+    const unsubscribe = subscribeResults((data) => {
+      firebaseReady.current = true;
+      setResults(data);
+      localStorage.setItem("ncaa_wres_results", JSON.stringify(data));
+    });
+    return unsubscribe;
+  }, []);
+
+  // Wrap setResults so admin changes push to Firebase
+  const setResultsAndSync = (updater) => {
+    setResults(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      localStorage.setItem("ncaa_wres_results", JSON.stringify(next));
+      saveResults(next);
+      return next;
+    });
+  };
 
   useEffect(() => { localStorage.setItem("ncaa_wres_entries", JSON.stringify(entries)); }, [entries]);
-  useEffect(() => { localStorage.setItem("ncaa_wres_results", JSON.stringify(results)); }, [results]);
 
   const allPickedFn = (picks) => WEIGHT_CLASSES.every(w => !!picks[w]);
   const leaderboard = [...entries]
@@ -135,7 +156,7 @@ export default function App() {
         {view === "scoring" && <ScoringPage />}
         {view === "payout" && <PayoutPage entries={entries} leaderboard={leaderboard} />}
         {view === "addPick" && <AddEntry entries={entries} setEntries={setEntries} onDone={() => setView("leaderboard")} />}
-        {view === "admin" && adminMode && <AdminPanel entries={entries} results={results} setResults={setResults} />}
+        {view === "admin" && adminMode && <AdminPanel entries={entries} results={results} setResults={setResultsAndSync} />}
       </main>
 
       <footer style={{
