@@ -38,7 +38,7 @@ function SeedBadge({ seed }) {
     <span style={{
       display: "inline-flex", alignItems: "center", justifyContent: "center",
       width: 22, height: 22, borderRadius: "50%",
-      background: isLow ? "#ef4444" : "#00d26a",
+      background: isLow ? "#ef4444" : "var(--accent)",
       color: "#fff", fontSize: 10, fontWeight: 700, flexShrink: 0,
     }}>#{seed}</span>
   );
@@ -114,31 +114,31 @@ export default function App() {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#fff", color: "#1a1a1a", display: "flex", flexDirection: "column" }}>
+    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text)", display: "flex", flexDirection: "column" }}>
       {/* Header */}
-      <header style={{ borderBottom: "1px solid #e5e7eb", background: "#fff", position: "sticky", top: 0, zIndex: 100 }}>
+      <header style={{ borderBottom: "1px solid var(--border)", background: "var(--bg)", position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px" }}>
           <div className="header-top" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 72 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <div onClick={handleIconClick} style={{
-                width: 48, height: 48, borderRadius: 12, background: "#00d26a",
+                width: 48, height: 48, borderRadius: 12, background: "var(--accent)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 cursor: "pointer", userSelect: "none",
               }}>
                 <WrestlingIcon color="#fff" size={30} />
               </div>
               <div>
-                <div style={{ fontWeight: 800, fontSize: 18, letterSpacing: -0.5, lineHeight: 1.1, color: "#1a1a1a" }}>Super Mat Mania</div>
-                <div style={{ fontWeight: 600, fontSize: 11, color: "#00d26a", letterSpacing: 0.5, lineHeight: 1.3 }}>The Poppy Challenge 2026</div>
-                <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 500, lineHeight: 1.3 }}>Mar 19–21 · Rocket Arena, Cleveland OH</div>
+                <div style={{ fontWeight: 800, fontSize: 18, letterSpacing: -0.5, lineHeight: 1.1, color: "var(--text)" }}>Super Mat Mania</div>
+                <div style={{ fontWeight: 600, fontSize: 11, color: "var(--accent)", letterSpacing: 0.5, lineHeight: 1.3 }}>The Poppy Challenge 2026</div>
+                <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 500, lineHeight: 1.3 }}>Mar 19–21 · Rocket Arena, Cleveland OH</div>
               </div>
             </div>
             <nav className="header-nav" style={{ display: "flex", gap: 2 }}>
               {navItems.map(({ key, label }) => (
                 <button key={key} onClick={() => setView(key)} style={{
                   padding: "8px 16px", borderRadius: 8, border: "none",
-                  background: view === key ? "#f0fdf4" : "transparent",
-                  color: view === key ? "#00b85e" : "#6b7280",
+                  background: view === key ? "var(--accent-bg)" : "transparent",
+                  color: view === key ? "var(--accent-text)" : "var(--text-secondary)",
                   fontWeight: view === key ? 600 : 500, fontSize: 14,
                   cursor: "pointer", transition: "all .15s",
                   fontFamily: "inherit",
@@ -160,8 +160,8 @@ export default function App() {
       </main>
 
       <footer style={{
-        borderTop: "1px solid #e5e7eb", padding: "24px",
-        textAlign: "center", fontSize: 13, color: "#9ca3af", fontWeight: 400,
+        borderTop: "1px solid var(--border)", padding: "24px",
+        textAlign: "center", fontSize: 13, color: "var(--text-muted)", fontWeight: 400,
         display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
       }}>
         <div>Last updated: {new Date(LAST_UPDATED).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</div>
@@ -207,8 +207,8 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
   if (leaderboard.length === 0) {
     return (
       <div style={{ textAlign: "center", padding: "80px 24px" }}>
-        <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 8, color: "#1a1a1a" }}>No entries yet</div>
-        <div style={{ color: "#9ca3af", marginBottom: 28 }}>Be the first to submit your picks for the 2026 NCAA Wrestling Championships</div>
+        <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 8, color: "var(--text)" }}>No entries yet</div>
+        <div style={{ color: "var(--text-muted)", marginBottom: 28 }}>Be the first to submit your picks for the 2026 NCAA Wrestling Championships</div>
       </div>
     );
   }
@@ -216,14 +216,14 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
   return (
     <div>
       <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 20 }}>
-        <h2 className="leaderboard-title" style={{ fontWeight: 800, fontSize: 24, letterSpacing: -0.5, color: "#1a1a1a" }}>Leaderboard</h2>
-        <span style={{ color: "#9ca3af", fontSize: 14, fontWeight: 500 }}>{leaderboard.length} entries</span>
+        <h2 className="leaderboard-title" style={{ fontWeight: 800, fontSize: 24, letterSpacing: -0.5, color: "var(--text)" }}>Leaderboard</h2>
+        <span style={{ color: "var(--text-muted)", fontSize: 14, fontWeight: 500 }}>{leaderboard.length} entries</span>
       </div>
 
       {/* Column header */}
       <div style={{
         display: "flex", alignItems: "center", padding: "0 18px 10px",
-        fontSize: 12, fontWeight: 500, color: "#9ca3af", borderBottom: "1px solid #f3f4f6",
+        fontSize: 12, fontWeight: 500, color: "var(--text-muted)", borderBottom: "1px solid var(--border-light)",
       }}>
         <div style={{ width: 36, marginRight: 14, textAlign: "center" }}>#</div>
         <div style={{ flex: 1 }}>Name</div>
@@ -242,10 +242,10 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
           const isFirst = i === 0;
           return (
             <div key={entry.id} style={{
-              borderBottom: "1px solid #f3f4f6",
-              background: isExp ? "#fafafa" : isLeader ? "#f0fdf4" : "#fff",
+              borderBottom: "1px solid var(--border-light)",
+              background: isExp ? "var(--bg-secondary)" : isLeader ? "var(--accent-bg)" : "var(--bg)",
               transition: "background .15s",
-              borderLeft: isLeader ? "3px solid #00d26a" : "3px solid transparent",
+              borderLeft: isLeader ? "3px solid var(--accent)" : "3px solid transparent",
             }}>
               {/* Row */}
               <div className="entry-row" style={{
@@ -253,16 +253,16 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
                 cursor: "pointer",
               }}
                 onClick={() => setExpanded(isExp ? null : entry.id)}
-                onMouseEnter={e => { if (!isExp) e.currentTarget.style.background = isLeader ? "#e6f9ef" : "#fafafa"; }}
-                onMouseLeave={e => { if (!isExp) e.currentTarget.style.background = isLeader ? "#f0fdf4" : "transparent"; }}
+                onMouseEnter={e => { if (!isExp) e.currentTarget.style.background = isLeader ? "var(--accent-bg)" : "var(--bg-secondary)"; }}
+                onMouseLeave={e => { if (!isExp) e.currentTarget.style.background = isLeader ? "var(--accent-bg)" : "transparent"; }}
               >
                 {/* Rank */}
                 <div style={{
                   width: 36, height: 36, borderRadius: 8,
-                  background: isLeader ? "#00d26a" : !entry.complete ? "#f9fafb" : "#f3f4f6",
+                  background: isLeader ? "var(--accent)" : !entry.complete ? "var(--bg-verylight)" : "var(--bg-tertiary)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontWeight: 700, fontSize: 14,
-                  color: isLeader ? "#fff" : !entry.complete ? "#d1d5db" : "#6b7280",
+                  color: isLeader ? "#fff" : !entry.complete ? "var(--text-faint)" : "var(--text-secondary)",
                   flexShrink: 0,
                 }}>
                   {rank}
@@ -270,9 +270,9 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
 
                 {/* Name */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div className="entry-name" style={{ fontWeight: 600, fontSize: 16, color: "#1a1a1a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{entry.name}</div>
+                  <div className="entry-name" style={{ fontWeight: 600, fontSize: 16, color: "var(--text)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{entry.name}</div>
                   {!allPicked(entry.picks) && (
-                    <div style={{ fontSize: 12, color: "#ef4444", fontWeight: 500, marginTop: 1 }}>
+                    <div style={{ fontSize: 12, color: "var(--danger)", fontWeight: 500, marginTop: 1 }}>
                       Incomplete lineup
                     </div>
                   )}
@@ -288,8 +288,8 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
                       <div key={w} style={{
                         width: 38, height: 26, borderRadius: 5, fontSize: 11, fontWeight: 600,
                         display: "flex", alignItems: "center", justifyContent: "center",
-                        background: pick ? (isElim ? "#e5e7eb" : getSchoolColor(pick.school)) : "#f3f4f6",
-                        color: pick ? "#fff" : "#d1d5db",
+                        background: pick ? (isElim ? "var(--border)" : getSchoolColor(pick.school)) : "var(--bg-tertiary)",
+                        color: pick ? "#fff" : "var(--text-faint)",
                         opacity: isElim ? 0.5 : 1,
                         textDecoration: isElim ? "line-through" : "none",
                         transition: "all .15s",
@@ -300,19 +300,19 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
 
                 {/* Score */}
                 <div style={{ width: 60, textAlign: "right", flexShrink: 0 }}>
-                  <div className="entry-score" style={{ fontWeight: 800, fontSize: 22, color: !entry.complete ? "#d1d5db" : "#1a1a1a", lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>
+                  <div className="entry-score" style={{ fontWeight: 800, fontSize: 22, color: !entry.complete ? "var(--text-faint)" : "var(--text)", lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>
                     {entry.score.toFixed(1)}
                   </div>
                 </div>
 
-                <div className={isFirst && expanded === null ? "chevron-hint" : ""} style={{ color: "#d1d5db", fontSize: 12, flexShrink: 0, width: 16, textAlign: "center", transition: "transform .2s", transform: isExp ? "rotate(180deg)" : "rotate(0deg)" }}>
+                <div className={isFirst && expanded === null ? "chevron-hint" : ""} style={{ color: "var(--text-faint)", fontSize: 12, flexShrink: 0, width: 16, textAlign: "center", transition: "transform .2s", transform: isExp ? "rotate(180deg)" : "rotate(0deg)" }}>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </div>
               </div>
 
               {/* Expanded picks */}
               {isExp && (
-                <div style={{ borderTop: "1px solid #f3f4f6", padding: "20px 18px", background: "#fafafa" }}>
+                <div style={{ borderTop: "1px solid var(--border-light)", padding: "20px 18px", background: "var(--bg-secondary)" }}>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 8, marginBottom: 16 }}>
                     {WEIGHT_CLASSES.map(w => {
                       const pick = entry.picks[w];
@@ -322,26 +322,26 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
                       const isElim = r?.eliminated;
                       return (
                         <div key={w} style={{
-                          background: isElim ? "#fafafa" : "#fff", border: "1px solid #e5e7eb",
+                          background: isElim ? "var(--bg-secondary)" : "var(--card-bg)", border: "1px solid var(--border)",
                           borderRadius: 10, padding: "12px 14px",
-                          borderLeft: pick ? `3px solid ${isElim ? "#d1d5db" : getSchoolColor(pick.school)}` : "3px solid #e5e7eb",
+                          borderLeft: pick ? `3px solid ${isElim ? "var(--text-faint)" : getSchoolColor(pick.school)}` : "3px solid var(--border)",
                           opacity: isElim ? 0.6 : 1,
                         }}>
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-                            <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600, letterSpacing: 1 }}>{w} LBS</span>
-                            {isElim && <span style={{ fontSize: 9, fontWeight: 700, color: "#ef4444", background: "#fef2f2", padding: "2px 6px", borderRadius: 4, letterSpacing: 0.5 }}>ELIM</span>}
+                            <span style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 600, letterSpacing: 1 }}>{w} LBS</span>
+                            {isElim && <span style={{ fontSize: 9, fontWeight: 700, color: "var(--danger)", background: "var(--danger-bg)", padding: "2px 6px", borderRadius: 4, letterSpacing: 0.5 }}>ELIM</span>}
                           </div>
                           {pick ? (
                             <>
                               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
                                 <SeedBadge seed={pick.seed} />
-                                <span style={{ fontWeight: 600, fontSize: 14, color: isElim ? "#9ca3af" : "#1a1a1a", textDecoration: isElim ? "line-through" : "none" }}>{pick.name}</span>
+                                <span style={{ fontWeight: 600, fontSize: 14, color: isElim ? "var(--text-muted)" : "var(--text)", textDecoration: isElim ? "line-through" : "none" }}>{pick.name}</span>
                               </div>
-                              <div style={{ fontSize: 12, color: "#9ca3af" }}>{pick.school}</div>
-                              {r && pts > 0 && <div style={{ fontSize: 12, color: isElim ? "#9ca3af" : "#00d26a", fontWeight: 600, marginTop: 4 }}>+{pts.toFixed(1)} pts</div>}
+                              <div style={{ fontSize: 12, color: "var(--text-muted)" }}>{pick.school}</div>
+                              {r && pts > 0 && <div style={{ fontSize: 12, color: isElim ? "var(--text-muted)" : "var(--accent)", fontWeight: 600, marginTop: 4 }}>+{pts.toFixed(1)} pts</div>}
                             </>
                           ) : (
-                            <div style={{ fontSize: 13, color: "#d1d5db" }}>No pick</div>
+                            <div style={{ fontSize: 13, color: "var(--text-faint)" }}>No pick</div>
                           )}
                         </div>
                       );
@@ -350,20 +350,20 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
                   <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     {deleteConfirm === entry.id ? (
                       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                        <span style={{ fontSize: 13, color: "#ef4444" }}>Delete this entry?</span>
+                        <span style={{ fontSize: 13, color: "var(--danger)" }}>Delete this entry?</span>
                         <button onClick={() => { setEntries(entries.filter(e => e.id !== entry.id)); setDeleteConfirm(null); setExpanded(null); }} style={{
-                          padding: "6px 14px", borderRadius: 8, background: "#ef4444", border: "none",
+                          padding: "6px 14px", borderRadius: 8, background: "var(--danger)", border: "none",
                           color: "#fff", fontSize: 13, cursor: "pointer", fontWeight: 600, fontFamily: "inherit",
                         }}>Delete</button>
                         <button onClick={() => setDeleteConfirm(null)} style={{
-                          padding: "6px 14px", borderRadius: 8, background: "#fff", border: "1px solid #e5e7eb",
-                          color: "#6b7280", fontSize: 13, cursor: "pointer", fontFamily: "inherit",
+                          padding: "6px 14px", borderRadius: 8, background: "var(--card-bg)", border: "1px solid var(--border)",
+                          color: "var(--text-secondary)", fontSize: 13, cursor: "pointer", fontFamily: "inherit",
                         }}>Cancel</button>
                       </div>
                     ) : (
                       <button onClick={(e) => { e.stopPropagation(); setDeleteConfirm(entry.id); }} style={{
-                        padding: "6px 14px", borderRadius: 8, background: "transparent", border: "1px solid #e5e7eb",
-                        color: "#9ca3af", fontSize: 13, cursor: "pointer", fontFamily: "inherit",
+                        padding: "6px 14px", borderRadius: 8, background: "transparent", border: "1px solid var(--border)",
+                        color: "var(--text-muted)", fontSize: 13, cursor: "pointer", fontFamily: "inherit",
                         transition: "all .15s",
                       }}>Remove</button>
                     )}
@@ -382,21 +382,21 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
 function ScoringPage() {
   return (
     <div style={{ maxWidth: 720, margin: "0 auto" }}>
-      <h2 style={{ fontWeight: 800, fontSize: 24, letterSpacing: -0.5, marginBottom: 4, color: "#1a1a1a" }}>Scoring</h2>
-      <p style={{ color: "#9ca3af", fontSize: 14, marginBottom: 32, lineHeight: 1.6 }}>
+      <h2 style={{ fontWeight: 800, fontSize: 24, letterSpacing: -0.5, marginBottom: 4, color: "var(--text)" }}>Scoring</h2>
+      <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 32, lineHeight: 1.6 }}>
         Each participant picks one wrestler per weight class (10 picks total). Points accumulate as your wrestlers win matches and place at the tournament.
       </p>
 
       {/* Advancement Points */}
-      <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: 28, marginBottom: 16 }}>
-        <h3 style={{ fontWeight: 700, fontSize: 16, color: "#1a1a1a", marginBottom: 4 }}>Advancement Points</h3>
-        <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 20 }}>Earned each round a picked wrestler wins</p>
+      <div style={{ background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 12, padding: 28, marginBottom: 16 }}>
+        <h3 style={{ fontWeight: 700, fontSize: 16, color: "var(--text)", marginBottom: 4 }}>Advancement Points</h3>
+        <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 20 }}>Earned each round a picked wrestler wins</p>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
           <thead>
-            <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
-              <th style={{ textAlign: "left", padding: "10px 12px", color: "#9ca3af", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Win Type</th>
-              <th style={{ textAlign: "center", padding: "10px 12px", color: "#9ca3af", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Championship</th>
-              <th style={{ textAlign: "center", padding: "10px 12px", color: "#9ca3af", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Consolation</th>
+            <tr style={{ borderBottom: "1px solid var(--border)" }}>
+              <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-muted)", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Win Type</th>
+              <th style={{ textAlign: "center", padding: "10px 12px", color: "var(--text-muted)", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Championship</th>
+              <th style={{ textAlign: "center", padding: "10px 12px", color: "var(--text-muted)", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Consolation</th>
             </tr>
           </thead>
           <tbody>
@@ -408,10 +408,10 @@ function ScoringPage() {
               ["Major Decision", "1.0", "1.0"],
               ["Bye", "1.0", "0.5"],
             ].map(([type, champ, consi], i) => (
-              <tr key={i} style={{ borderBottom: "1px solid #f3f4f6" }}>
-                <td style={{ padding: "12px", color: "#374151", fontWeight: 500 }}>{type}</td>
-                <td style={{ padding: "12px", textAlign: "center", fontWeight: 700, color: "#00d26a" }}>{champ}</td>
-                <td style={{ padding: "12px", textAlign: "center", fontWeight: 600, color: "#6b7280" }}>{consi}</td>
+              <tr key={i} style={{ borderBottom: "1px solid var(--border-light)" }}>
+                <td style={{ padding: "12px", color: "var(--text-body)", fontWeight: 500 }}>{type}</td>
+                <td style={{ padding: "12px", textAlign: "center", fontWeight: 700, color: "var(--accent)" }}>{champ}</td>
+                <td style={{ padding: "12px", textAlign: "center", fontWeight: 600, color: "var(--text-secondary)" }}>{consi}</td>
               </tr>
             ))}
           </tbody>
@@ -419,31 +419,31 @@ function ScoringPage() {
       </div>
 
       {/* Placement Points */}
-      <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: 28, marginBottom: 16 }}>
-        <h3 style={{ fontWeight: 700, fontSize: 16, color: "#1a1a1a", marginBottom: 4 }}>Final Placement Points</h3>
-        <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 20 }}>One-time bonus awarded at the end of the tournament (All-American = top 8)</p>
+      <div style={{ background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 12, padding: 28, marginBottom: 16 }}>
+        <h3 style={{ fontWeight: 700, fontSize: 16, color: "var(--text)", marginBottom: 4 }}>Final Placement Points</h3>
+        <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 20 }}>One-time bonus awarded at the end of the tournament (All-American = top 8)</p>
         <div className="scoring-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
           {Object.entries(PLACEMENT_POINTS).map(([place, pts]) => (
             <div key={place} style={{
-              background: "#fafafa", border: "1px solid #e5e7eb", borderRadius: 10,
+              background: "var(--bg-secondary)", border: "1px solid var(--border)", borderRadius: 10,
               padding: "16px 12px", textAlign: "center",
             }}>
-              <div style={{ fontWeight: 500, fontSize: 13, color: "#9ca3af", marginBottom: 4 }}>
+              <div style={{ fontWeight: 500, fontSize: 13, color: "var(--text-muted)", marginBottom: 4 }}>
                 {place === "1" ? "1st" : place === "2" ? "2nd" : place === "3" ? "3rd" : `${place}th`}
               </div>
-              <div style={{ fontWeight: 800, fontSize: 28, color: "#1a1a1a", lineHeight: 1 }}>
+              <div style={{ fontWeight: 800, fontSize: 28, color: "var(--text)", lineHeight: 1 }}>
                 {pts}
               </div>
-              <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>pts</div>
+              <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>pts</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Pick Rules */}
-      <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: 28 }}>
-        <h3 style={{ fontWeight: 700, fontSize: 16, color: "#1a1a1a", marginBottom: 16 }}>Pick Rules</h3>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14, fontSize: 14, color: "#374151" }}>
+      <div style={{ background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 12, padding: 28 }}>
+        <h3 style={{ fontWeight: 700, fontSize: 16, color: "var(--text)", marginBottom: 16 }}>Pick Rules</h3>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, fontSize: 14, color: "var(--text-body)" }}>
           {[
             ["1", "Pick one wrestler per weight class (10 picks total)", "#00d26a"],
             ["2", "Must include at least one wrestler seeded #1\u20139 (chalk pick)", "#00d26a"],
@@ -463,8 +463,8 @@ function ScoringPage() {
 
       {/* Formula */}
       <div style={{
-        marginTop: 16, background: "#fafafa", borderRadius: 10, padding: "14px 20px",
-        fontSize: 14, color: "#6b7280", textAlign: "center", border: "1px solid #e5e7eb",
+        marginTop: 16, background: "var(--bg-secondary)", borderRadius: 10, padding: "14px 20px",
+        fontSize: 14, color: "var(--text-secondary)", textAlign: "center", border: "1px solid var(--border)",
       }}>
         <span style={{ fontWeight: 700 }}>Total Score</span> = sum of all 10 picks' (advancement + placement points)
       </div>
@@ -491,17 +491,17 @@ function PayoutPage({ entries, leaderboard }) {
     <div style={{ maxWidth: 640, margin: "0 auto" }}>
       {/* Prize Pool Header */}
       <div style={{
-        background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)",
+        background: `linear-gradient(135deg, var(--payout-grad-start) 0%, var(--payout-grad-end) 100%)`,
         borderRadius: 16, padding: "36px 28px", marginBottom: 20, textAlign: "center",
-        border: "1px solid #333",
+        border: "1px solid var(--payout-border)",
       }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "#00d26a", letterSpacing: 2, marginBottom: 8, textTransform: "uppercase" }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--accent)", letterSpacing: 2, marginBottom: 8, textTransform: "uppercase" }}>
           Total Prize Pool
         </div>
         <div style={{ fontSize: 56, fontWeight: 900, color: "#fff", lineHeight: 1, marginBottom: 8, fontFamily: "'Barlow Condensed', sans-serif" }}>
           ${totalPot.toLocaleString()}
         </div>
-        <div style={{ fontSize: 14, color: "#6b7280" }}>
+        <div style={{ fontSize: 14, color: "var(--text-secondary)" }}>
           {totalEntries} entries × ${entryFee} per entry
         </div>
       </div>
@@ -510,23 +510,23 @@ function PayoutPage({ entries, leaderboard }) {
       <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24 }}>
         {podium.map(({ place, pct, amount, color, icon, leader }) => (
           <div key={place} style={{
-            background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14,
+            background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 14,
             padding: "20px 24px", display: "flex", alignItems: "center", gap: 16,
             borderLeft: `5px solid ${color}`,
           }}>
             <div style={{ fontSize: 36, lineHeight: 1 }}>{icon}</div>
             <div style={{ flex: 1 }}>
               <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 2 }}>
-                <span style={{ fontWeight: 800, fontSize: 18, color: "#1a1a1a" }}>{place} Place</span>
-                <span style={{ fontSize: 13, color: "#9ca3af", fontWeight: 500 }}>{pct} of pool</span>
+                <span style={{ fontWeight: 800, fontSize: 18, color: "var(--text)" }}>{place} Place</span>
+                <span style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 500 }}>{pct} of pool</span>
               </div>
-              <div style={{ fontWeight: 900, fontSize: 32, color: "#00d26a", lineHeight: 1.1, fontFamily: "'Barlow Condensed', sans-serif" }}>
+              <div style={{ fontWeight: 900, fontSize: 32, color: "var(--accent)", lineHeight: 1.1, fontFamily: "'Barlow Condensed', sans-serif" }}>
                 ${amount.toLocaleString()}
               </div>
               {leader && (
-                <div style={{ fontSize: 13, color: "#6b7280", marginTop: 6, fontWeight: 500 }}>
-                  Current leader: <span style={{ color: "#1a1a1a", fontWeight: 700 }}>{leader.name}</span>
-                  <span style={{ color: "#9ca3af" }}> ({leader.points} pts)</span>
+                <div style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 6, fontWeight: 500 }}>
+                  Current leader: <span style={{ color: "var(--text)", fontWeight: 700 }}>{leader.name}</span>
+                  <span style={{ color: "var(--text-muted)" }}> ({leader.points} pts)</span>
                 </div>
               )}
             </div>
@@ -536,29 +536,29 @@ function PayoutPage({ entries, leaderboard }) {
 
       {/* Breakdown */}
       <div style={{
-        background: "#fafafa", border: "1px solid #e5e7eb", borderRadius: 12, padding: 24,
+        background: "var(--bg-secondary)", border: "1px solid var(--border)", borderRadius: 12, padding: 24,
       }}>
-        <h3 style={{ fontWeight: 700, fontSize: 16, color: "#1a1a1a", marginBottom: 16 }}>Payout Breakdown</h3>
+        <h3 style={{ fontWeight: 700, fontSize: 16, color: "var(--text)", marginBottom: 16 }}>Payout Breakdown</h3>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
           <thead>
-            <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
-              <th style={{ textAlign: "left", padding: "10px 12px", color: "#9ca3af", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Place</th>
-              <th style={{ textAlign: "center", padding: "10px 12px", color: "#9ca3af", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Share</th>
-              <th style={{ textAlign: "right", padding: "10px 12px", color: "#9ca3af", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Payout</th>
+            <tr style={{ borderBottom: "1px solid var(--border)" }}>
+              <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-muted)", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Place</th>
+              <th style={{ textAlign: "center", padding: "10px 12px", color: "var(--text-muted)", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Share</th>
+              <th style={{ textAlign: "right", padding: "10px 12px", color: "var(--text-muted)", fontWeight: 500, fontSize: 12, letterSpacing: 0.5 }}>Payout</th>
             </tr>
           </thead>
           <tbody>
             {podium.map(({ place, pct, amount }, i) => (
-              <tr key={i} style={{ borderBottom: "1px solid #f3f4f6" }}>
-                <td style={{ padding: "12px", fontWeight: 600, color: "#374151" }}>{place}</td>
-                <td style={{ padding: "12px", textAlign: "center", color: "#6b7280" }}>{pct}</td>
-                <td style={{ padding: "12px", textAlign: "right", fontWeight: 800, color: "#00d26a", fontSize: 16 }}>${amount.toLocaleString()}</td>
+              <tr key={i} style={{ borderBottom: "1px solid var(--border-light)" }}>
+                <td style={{ padding: "12px", fontWeight: 600, color: "var(--text-body)" }}>{place}</td>
+                <td style={{ padding: "12px", textAlign: "center", color: "var(--text-secondary)" }}>{pct}</td>
+                <td style={{ padding: "12px", textAlign: "right", fontWeight: 800, color: "var(--accent)", fontSize: 16 }}>${amount.toLocaleString()}</td>
               </tr>
             ))}
-            <tr style={{ borderTop: "2px solid #e5e7eb" }}>
-              <td style={{ padding: "12px", fontWeight: 700, color: "#1a1a1a" }}>Total</td>
-              <td style={{ padding: "12px", textAlign: "center", color: "#6b7280" }}>100%</td>
-              <td style={{ padding: "12px", textAlign: "right", fontWeight: 800, color: "#1a1a1a", fontSize: 16 }}>${totalPot.toLocaleString()}</td>
+            <tr style={{ borderTop: "2px solid var(--border)" }}>
+              <td style={{ padding: "12px", fontWeight: 700, color: "var(--text)" }}>Total</td>
+              <td style={{ padding: "12px", textAlign: "center", color: "var(--text-secondary)" }}>100%</td>
+              <td style={{ padding: "12px", textAlign: "right", fontWeight: 800, color: "var(--text)", fontSize: 16 }}>${totalPot.toLocaleString()}</td>
             </tr>
           </tbody>
         </table>
@@ -566,8 +566,8 @@ function PayoutPage({ entries, leaderboard }) {
 
       {/* Fun note */}
       <div style={{
-        marginTop: 16, background: "#f0fdf4", borderRadius: 10, padding: "14px 20px",
-        fontSize: 13, color: "#15803d", textAlign: "center", border: "1px solid #bbf7d0",
+        marginTop: 16, background: "var(--accent-bg)", borderRadius: 10, padding: "14px 20px",
+        fontSize: 13, color: "var(--accent-dark)", textAlign: "center", border: "1px solid var(--accent-border)",
         fontWeight: 600,
       }}>
         Winner takes the lion's share. Good luck!
@@ -677,10 +677,10 @@ function AdminPanel({ entries, results, setResults }) {
   return (
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
-        <h2 style={{ fontWeight: 800, fontSize: 24, letterSpacing: -0.5, color: "#1a1a1a" }}>⚡ Admin Scoring</h2>
-        <span style={{ background: "#fef3c7", color: "#92400e", fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20 }}>SECRET</span>
+        <h2 style={{ fontWeight: 800, fontSize: 24, letterSpacing: -0.5, color: "var(--text)" }}>⚡ Admin Scoring</h2>
+        <span style={{ background: "var(--warning-bg)", color: "var(--warning-text)", fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20 }}>SECRET</span>
       </div>
-      <p style={{ color: "#9ca3af", fontSize: 14, marginBottom: 24 }}>
+      <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 24 }}>
         Log wins and set placements for all seeded wrestlers. Picked wrestlers are highlighted.
       </p>
 
@@ -691,8 +691,8 @@ function AdminPanel({ entries, results, setResults }) {
           return (
             <button key={w} onClick={() => setSelectedWeight(w)} style={{
               padding: "8px 16px", borderRadius: 8, border: "none",
-              background: selectedWeight === w ? "#00d26a" : hasResults ? "#f0fdf4" : "#f3f4f6",
-              color: selectedWeight === w ? "#fff" : hasResults ? "#00b85e" : "#6b7280",
+              background: selectedWeight === w ? "var(--accent)" : hasResults ? "var(--accent-bg)" : "var(--bg-tertiary)",
+              color: selectedWeight === w ? "#fff" : hasResults ? "var(--accent-text)" : "var(--text-secondary)",
               fontWeight: 600, fontSize: 14, cursor: "pointer", fontFamily: "inherit",
               transition: "all .15s",
             }}>
@@ -705,15 +705,15 @@ function AdminPanel({ entries, results, setResults }) {
       {/* Wrestlers for this weight */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 32 }}>
         {wrestlers.length === 0 && (
-          <div style={{ textAlign: "center", padding: 40, color: "#9ca3af" }}>No one picked a wrestler at {selectedWeight} lbs</div>
+          <div style={{ textAlign: "center", padding: 40, color: "var(--text-muted)" }}>No one picked a wrestler at {selectedWeight} lbs</div>
         )}
         {wrestlers.map(w => {
           const r = results[w.key] || { advPoints: 0, placementPoints: 0, wins: [], placement: null };
           const totalPts = (r.advPoints || 0) + (r.placementPoints || 0);
           return (
             <div key={w.key} style={{
-              background: "#fff",
-              border: `1px solid #e5e7eb`,
+              background: "var(--card-bg)",
+              border: "1px solid var(--border)",
               borderRadius: 12, padding: 20,
               borderLeft: `4px solid ${getSchoolColor(w.school)}`,
             }}>
@@ -722,20 +722,20 @@ function AdminPanel({ entries, results, setResults }) {
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <SeedBadge seed={w.seed} />
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: 16, color: "#1a1a1a" }}>{w.name}</div>
-                    <div style={{ fontSize: 12, color: "#9ca3af" }}>
+                    <div style={{ fontWeight: 700, fontSize: 16, color: "var(--text)" }}>{w.name}</div>
+                    <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
                       {w.school}
                       {w.pickedBy.length > 0
-                        ? <> · <span style={{ color: "#00b85e", fontWeight: 500 }}>{w.pickedBy.length} pick{w.pickedBy.length > 1 ? "s" : ""}</span></>
+                        ? <> · <span style={{ color: "var(--accent-text)", fontWeight: 500 }}>{w.pickedBy.length} pick{w.pickedBy.length > 1 ? "s" : ""}</span></>
                         : ""
                       }
-                      {r.eliminated && <> · <span style={{ color: "#ef4444", fontWeight: 600 }}>ELIMINATED</span></>}
+                      {r.eliminated && <> · <span style={{ color: "var(--danger)", fontWeight: 600 }}>ELIMINATED</span></>}
                     </div>
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <div style={{ fontWeight: 800, fontSize: 22, color: totalPts > 0 ? "#00d26a" : "#d1d5db" }}>{totalPts.toFixed(1)}</div>
-                  <div style={{ fontSize: 11, color: "#9ca3af" }}>adv: {(r.advPoints || 0).toFixed(1)} + place: {(r.placementPoints || 0).toFixed(1)}</div>
+                  <div style={{ fontWeight: 800, fontSize: 22, color: totalPts > 0 ? "var(--accent)" : "var(--text-faint)" }}>{totalPts.toFixed(1)}</div>
+                  <div style={{ fontSize: 11, color: "var(--text-muted)" }}>adv: {(r.advPoints || 0).toFixed(1)} + place: {(r.placementPoints || 0).toFixed(1)}</div>
                 </div>
               </div>
 
@@ -744,15 +744,15 @@ function AdminPanel({ entries, results, setResults }) {
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 12 }}>
                   {r.wins.map((win, i) => (
                     <span key={i} style={{
-                      background: win.bracket === "champ" ? "#dbeafe" : "#fef3c7",
-                      color: win.bracket === "champ" ? "#1d4ed8" : "#92400e",
+                      background: win.bracket === "champ" ? "var(--champ-bg)" : "var(--consi-bg)",
+                      color: win.bracket === "champ" ? "var(--champ-text)" : "var(--consi-text)",
                       fontSize: 11, fontWeight: 600, padding: "3px 8px", borderRadius: 6,
                     }}>
                       R{win.round}: {win.type} ({win.bracket === "champ" ? "C" : "Con"})
                     </span>
                   ))}
                   <button onClick={() => removeLastWin(w.key)} style={{
-                    background: "#fef2f2", border: "none", color: "#ef4444", fontSize: 11,
+                    background: "var(--danger-bg)", border: "none", color: "var(--danger)", fontSize: 11,
                     fontWeight: 600, padding: "3px 8px", borderRadius: 6, cursor: "pointer",
                   }}>✕ Undo</button>
                 </div>
@@ -760,15 +760,15 @@ function AdminPanel({ entries, results, setResults }) {
 
               {/* Add win buttons */}
               <div style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", marginBottom: 6, letterSpacing: 0.5 }}>ADD WIN</div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)", marginBottom: 6, letterSpacing: 0.5 }}>ADD WIN</div>
                 <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
                   {["champ", "consi"].map(bracket => (
                     winTypes.map(wt => (
                       <button key={`${bracket}-${wt.value}`} onClick={() => addWin(w.key, wt.value, bracket)} style={{
                         padding: "5px 10px", borderRadius: 6, fontSize: 11, fontWeight: 600,
-                        border: "1px solid #e5e7eb", cursor: "pointer", fontFamily: "inherit",
-                        background: bracket === "champ" ? "#eff6ff" : "#fffbeb",
-                        color: bracket === "champ" ? "#2563eb" : "#b45309",
+                        border: "1px solid var(--border)", cursor: "pointer", fontFamily: "inherit",
+                        background: bracket === "champ" ? "var(--champ-btn-bg)" : "var(--consi-btn-bg)",
+                        color: bracket === "champ" ? "var(--champ-btn-text)" : "var(--consi-btn-text)",
                         transition: "all .1s",
                       }}
                         onMouseEnter={e => e.target.style.transform = "scale(1.05)"}
@@ -783,14 +783,14 @@ function AdminPanel({ entries, results, setResults }) {
 
               {/* Placement */}
               <div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", marginBottom: 6, letterSpacing: 0.5 }}>PLACEMENT</div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)", marginBottom: 6, letterSpacing: 0.5 }}>PLACEMENT</div>
                 <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
                   {[1, 2, 3, 4, 5, 6, 7, 8].map(place => (
                     <button key={place} onClick={() => setPlacement(w.key, r.placement === place ? null : place)} style={{
                       width: 40, height: 32, borderRadius: 6, fontSize: 13, fontWeight: 700,
-                      border: r.placement === place ? "2px solid #00d26a" : "1px solid #e5e7eb",
-                      background: r.placement === place ? "#f0fdf4" : "#fff",
-                      color: r.placement === place ? "#00d26a" : "#6b7280",
+                      border: r.placement === place ? "2px solid var(--accent)" : "1px solid var(--border)",
+                      background: r.placement === place ? "var(--accent-bg)" : "var(--card-bg)",
+                      color: r.placement === place ? "var(--accent)" : "var(--text-secondary)",
                       cursor: "pointer", fontFamily: "inherit",
                     }}>
                       {place === 1 ? "🥇" : place === 2 ? "🥈" : place === 3 ? "🥉" : place}
@@ -799,7 +799,7 @@ function AdminPanel({ entries, results, setResults }) {
                   {r.placement && (
                     <button onClick={() => setPlacement(w.key, null)} style={{
                       padding: "4px 10px", borderRadius: 6, fontSize: 11, border: "none",
-                      background: "#fef2f2", color: "#ef4444", cursor: "pointer", fontWeight: 600,
+                      background: "var(--danger-bg)", color: "var(--danger)", cursor: "pointer", fontWeight: 600,
                     }}>Clear</button>
                   )}
                 </div>
@@ -809,9 +809,9 @@ function AdminPanel({ entries, results, setResults }) {
               <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 8 }}>
                 <button onClick={() => toggleEliminated(w.key)} style={{
                   padding: "5px 14px", borderRadius: 6, fontSize: 11, fontWeight: 700,
-                  border: r.eliminated ? "2px solid #ef4444" : "1px solid #e5e7eb",
-                  background: r.eliminated ? "#fef2f2" : "#fff",
-                  color: r.eliminated ? "#ef4444" : "#9ca3af",
+                  border: r.eliminated ? "2px solid var(--danger)" : "1px solid var(--border)",
+                  background: r.eliminated ? "var(--danger-bg)" : "var(--card-bg)",
+                  color: r.eliminated ? "var(--danger)" : "var(--text-muted)",
                   cursor: "pointer", fontFamily: "inherit", letterSpacing: 0.5,
                 }}>
                   {r.eliminated ? "✕ ELIMINATED" : "Mark Eliminated"}
@@ -823,19 +823,19 @@ function AdminPanel({ entries, results, setResults }) {
       </div>
 
       {/* Utility buttons */}
-      <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ borderTop: "1px solid var(--border)", paddingTop: 24, display: "flex", flexDirection: "column", gap: 16 }}>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           <button onClick={handleExport} style={{
-            padding: "10px 20px", borderRadius: 10, background: "#f3f4f6", border: "none",
-            color: "#374151", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+            padding: "10px 20px", borderRadius: 10, background: "var(--bg-tertiary)", border: "none",
+            color: "var(--text-body)", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
           }}>📋 Export Results JSON</button>
           <button onClick={handleClearWeight} style={{
-            padding: "10px 20px", borderRadius: 10, background: "#fef2f2", border: "none",
-            color: "#ef4444", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+            padding: "10px 20px", borderRadius: 10, background: "var(--danger-bg)", border: "none",
+            color: "var(--danger)", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
           }}>🗑 Clear {selectedWeight} lbs</button>
           <button onClick={() => { if (confirm("Clear ALL results?")) setResults({}); }} style={{
-            padding: "10px 20px", borderRadius: 10, background: "#fef2f2", border: "none",
-            color: "#ef4444", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+            padding: "10px 20px", borderRadius: 10, background: "var(--danger-bg)", border: "none",
+            color: "var(--danger)", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
           }}>💣 Reset All</button>
         </div>
 
@@ -845,15 +845,15 @@ function AdminPanel({ entries, results, setResults }) {
               value={exportText}
               onChange={e => setExportText(e.target.value)}
               style={{
-                width: "100%", height: 200, borderRadius: 10, border: "1px solid #e5e7eb",
+                width: "100%", height: 200, borderRadius: 10, border: "1px solid var(--border)",
                 padding: 14, fontSize: 12, fontFamily: "monospace", resize: "vertical",
-                outline: "none",
+                outline: "none", background: "var(--input-bg)", color: "var(--text)",
               }}
-              onFocus={e => e.target.style.borderColor = "#00d26a"}
-              onBlur={e => e.target.style.borderColor = "#e5e7eb"}
+              onFocus={e => e.target.style.borderColor = "var(--accent)"}
+              onBlur={e => e.target.style.borderColor = "var(--border)"}
             />
             <button onClick={handleImport} style={{
-              marginTop: 8, padding: "10px 20px", borderRadius: 10, background: "#00d26a",
+              marginTop: 8, padding: "10px 20px", borderRadius: 10, background: "var(--accent)",
               border: "none", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer",
               fontFamily: "inherit",
             }}>📥 Import Results JSON</button>
@@ -916,19 +916,19 @@ function AddEntry({ entries, setEntries, onDone }) {
 
   if (submitted) return (
     <div style={{ textAlign: "center", padding: "80px 24px" }}>
-      <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#00d26a", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
+      <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--accent)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
       </div>
-      <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 8, color: "#1a1a1a" }}>Entry submitted</div>
-      <div style={{ color: "#9ca3af", marginBottom: 32, fontSize: 15 }}>Good luck, {name}! May your picks go far.</div>
+      <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 8, color: "var(--text)" }}>Entry submitted</div>
+      <div style={{ color: "var(--text-muted)", marginBottom: 32, fontSize: 15 }}>Good luck, {name}! May your picks go far.</div>
       <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
         <button onClick={onDone} style={{
-          padding: "10px 24px", borderRadius: 10, background: "#00d26a", border: "none",
+          padding: "10px 24px", borderRadius: 10, background: "var(--accent)", border: "none",
           color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
         }}>View Leaderboard</button>
         <button onClick={() => { setName(""); setPicks({}); setSubmitted(false); setError(""); }} style={{
-          padding: "10px 24px", borderRadius: 10, background: "#fff", border: "1px solid #e5e7eb",
-          color: "#6b7280", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+          padding: "10px 24px", borderRadius: 10, background: "var(--card-bg)", border: "1px solid var(--border)",
+          color: "var(--text-secondary)", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
         }}>Add Another</button>
       </div>
     </div>
@@ -938,8 +938,8 @@ function AddEntry({ entries, setEntries, onDone }) {
 
   return (
     <div style={{ maxWidth: 780, margin: "0 auto" }}>
-      <h2 style={{ fontWeight: 800, fontSize: 24, letterSpacing: -0.5, marginBottom: 4, color: "#1a1a1a" }}>Add your picks</h2>
-      <p style={{ color: "#9ca3af", fontSize: 14, marginBottom: 24 }}>
+      <h2 style={{ fontWeight: 800, fontSize: 24, letterSpacing: -0.5, marginBottom: 4, color: "var(--text)" }}>Add your picks</h2>
+      <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 24 }}>
         Pick one wrestler per weight class. You must have at least one seed #1-9 AND one seed #10+.
       </p>
 
@@ -952,30 +952,30 @@ function AddEntry({ entries, setEntries, onDone }) {
         ].map(([ok, label], i) => (
           <div key={i} style={{
             display: "flex", alignItems: "center", gap: 6,
-            background: ok ? "#f0fdf4" : "#fafafa",
-            border: `1px solid ${ok ? "#bbf7d0" : "#e5e7eb"}`,
+            background: ok ? "var(--accent-bg)" : "var(--bg-secondary)",
+            border: `1px solid ${ok ? "var(--accent-border)" : "var(--border)"}`,
             borderRadius: 8, padding: "6px 14px", fontSize: 13,
           }}>
-            <span style={{ color: ok ? "#00d26a" : "#d1d5db", fontSize: 14 }}>{ok ? "\u2713" : "\u25CB"}</span>
-            <span style={{ color: ok ? "#00b85e" : "#9ca3af", fontWeight: 500 }}>{label}</span>
+            <span style={{ color: ok ? "var(--accent)" : "var(--text-faint)", fontSize: 14 }}>{ok ? "\u2713" : "\u25CB"}</span>
+            <span style={{ color: ok ? "var(--accent-text)" : "var(--text-muted)", fontWeight: 500 }}>{label}</span>
           </div>
         ))}
       </div>
 
       {/* Username */}
       <div style={{ marginBottom: 24 }}>
-        <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 8 }}>Username</label>
+        <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "var(--text-body)", marginBottom: 8 }}>Username</label>
         <input
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder="Enter your name..."
           style={{
-            width: "100%", padding: "12px 16px", borderRadius: 10, background: "#fff",
-            border: "1px solid #e5e7eb", color: "#1a1a1a", fontSize: 15,
+            width: "100%", padding: "12px 16px", borderRadius: 10, background: "var(--input-bg)",
+            border: "1px solid var(--border)", color: "var(--text)", fontSize: 15,
             fontFamily: "inherit", outline: "none", transition: "border-color .15s",
           }}
-          onFocus={e => { e.target.style.borderColor = "#00d26a"; e.target.style.boxShadow = "0 0 0 3px rgba(0,210,106,0.1)"; }}
-          onBlur={e => { e.target.style.borderColor = "#e5e7eb"; e.target.style.boxShadow = "none"; }}
+          onFocus={e => { e.target.style.borderColor = "var(--accent)"; e.target.style.boxShadow = "0 0 0 3px rgba(0,210,106,0.1)"; }}
+          onBlur={e => { e.target.style.borderColor = "var(--border)"; e.target.style.boxShadow = "none"; }}
         />
       </div>
 
@@ -986,12 +986,12 @@ function AddEntry({ entries, setEntries, onDone }) {
           const wrestlers = WRESTLERS_BY_WEIGHT[w];
           return (
             <div key={w} style={{
-              background: "#fff", border: `1px solid ${pick ? getSchoolColor(pick.school) + "44" : "#e5e7eb"}`,
+              background: "var(--card-bg)", border: `1px solid ${pick ? getSchoolColor(pick.school) + "44" : "var(--border)"}`,
               borderRadius: 12, padding: "16px 18px", transition: "border-color .15s",
-              borderLeft: pick ? `3px solid ${getSchoolColor(pick.school)}` : "3px solid #e5e7eb",
+              borderLeft: pick ? `3px solid ${getSchoolColor(pick.school)}` : "3px solid var(--border)",
             }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                <div style={{ fontWeight: 700, fontSize: 16, color: "#1a1a1a" }}>{w} <span style={{ fontSize: 13, color: "#9ca3af", fontWeight: 500 }}>lbs</span></div>
+                <div style={{ fontWeight: 700, fontSize: 16, color: "var(--text)" }}>{w} <span style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 500 }}>lbs</span></div>
                 {pick && <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   <SeedBadge seed={pick.seed} />
                   <span style={{ fontSize: 12, color: getSchoolColor(pick.school), fontWeight: 600 }}>{pick.school}</span>
@@ -1001,8 +1001,8 @@ function AddEntry({ entries, setEntries, onDone }) {
                 value={pick ? `${pick.seed}|${pick.name}~${pick.school}` : ""}
                 onChange={e => handlePick(w, e.target.value)}
                 style={{
-                  width: "100%", padding: "10px 12px", borderRadius: 8, background: "#fafafa",
-                  border: "1px solid #e5e7eb", color: "#1a1a1a", fontSize: 14,
+                  width: "100%", padding: "10px 12px", borderRadius: 8, background: "var(--bg-secondary)",
+                  border: "1px solid var(--border)", color: "var(--text)", fontSize: 14,
                   fontFamily: "inherit", cursor: "pointer", outline: "none",
                 }}
               >
@@ -1027,15 +1027,15 @@ function AddEntry({ entries, setEntries, onDone }) {
         })}
       </div>
 
-      {error && <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "12px 16px", color: "#ef4444", fontSize: 14, marginBottom: 16, fontWeight: 500 }}>{error}</div>}
+      {error && <div style={{ background: "var(--danger-bg)", border: "1px solid var(--danger-border)", borderRadius: 10, padding: "12px 16px", color: "var(--danger)", fontSize: 14, marginBottom: 16, fontWeight: 500 }}>{error}</div>}
 
       <button
         onClick={handleSubmit}
         disabled={!valid}
         style={{
           width: "100%", padding: "14px", borderRadius: 12, border: "none",
-          background: valid ? "#00d26a" : "#f3f4f6",
-          color: valid ? "#fff" : "#d1d5db", fontSize: 15,
+          background: valid ? "var(--accent)" : "var(--bg-tertiary)",
+          color: valid ? "#fff" : "var(--text-faint)", fontSize: 15,
           fontWeight: 700, cursor: valid ? "pointer" : "not-allowed",
           transition: "all .15s", fontFamily: "inherit",
         }}
