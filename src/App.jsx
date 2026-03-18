@@ -570,7 +570,7 @@ function PayoutPage({ entries, leaderboard }) {
         fontSize: 13, color: "#15803d", textAlign: "center", border: "1px solid #bbf7d0",
         fontWeight: 600,
       }}>
-        Winner takes the lion's share. Good luck, gentlemen.
+        Winner takes the lion's share. Good luck!
       </div>
     </div>
   );
