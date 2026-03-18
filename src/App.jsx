@@ -585,11 +585,10 @@ function AdminPanel({ entries, results, setResults }) {
           const totalPts = (r.advPoints || 0) + (r.placementPoints || 0);
           return (
             <div key={w.key} style={{
-              background: w.pickedBy.length > 0 ? "#fff" : "#fafafa",
-              border: `1px solid ${w.pickedBy.length > 0 ? "#e5e7eb" : "#f3f4f6"}`,
-              borderRadius: 12, padding: w.pickedBy.length > 0 ? 20 : 14,
-              borderLeft: `4px solid ${w.pickedBy.length > 0 ? getSchoolColor(w.school) : "#e5e7eb"}`,
-              opacity: w.pickedBy.length > 0 ? 1 : 0.6,
+              background: "#fff",
+              border: `1px solid #e5e7eb`,
+              borderRadius: 12, padding: 20,
+              borderLeft: `4px solid ${getSchoolColor(w.school)}`,
             }}>
               {/* Wrestler header */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
