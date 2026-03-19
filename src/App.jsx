@@ -177,6 +177,7 @@ export default function App() {
 function Leaderboard({ leaderboard, entries, setEntries, results }) {
   const [expanded, setExpanded] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [search, setSearch] = useState("");
 
   const allPicked = (picks) => WEIGHT_CLASSES.every(w => !!picks[w]);
   const hasLowSeed = (picks) => WEIGHT_CLASSES.some(w => picks[w]?.seed >= 10);
@@ -215,11 +216,45 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
     );
   }
 
+  const filtered = search.trim()
+    ? leaderboard.filter(e => e.name.toLowerCase().includes(search.trim().toLowerCase()))
+    : leaderboard;
+
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 20 }}>
-        <h2 className="leaderboard-title" style={{ fontWeight: 800, fontSize: 24, letterSpacing: -0.5, color: "var(--text)" }}>Leaderboard</h2>
-        <span style={{ color: "var(--text-muted)", fontSize: 14, fontWeight: 500 }}>{leaderboard.length} entries</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 10, flex: 1, minWidth: 200 }}>
+          <h2 className="leaderboard-title" style={{ fontWeight: 800, fontSize: 24, letterSpacing: -0.5, color: "var(--text)" }}>Leaderboard</h2>
+          <span style={{ color: "var(--text-muted)", fontSize: 14, fontWeight: 500 }}>{search.trim() ? `${filtered.length} of ${leaderboard.length}` : `${leaderboard.length} entries`}</span>
+        </div>
+        <div style={{ position: "relative", minWidth: 180, maxWidth: 260, flex: "0 1 260px" }}>
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Find your name..."
+            style={{
+              width: "100%", padding: "8px 36px 8px 14px", borderRadius: 10,
+              border: "1px solid var(--border)", background: "var(--input-bg)",
+              color: "var(--text)", fontSize: 14, fontFamily: "inherit",
+              outline: "none", transition: "border-color .15s",
+            }}
+            onFocus={e => e.target.style.borderColor = "var(--accent)"}
+            onBlur={e => e.target.style.borderColor = "var(--border)"}
+          />
+          {search ? (
+            <button onClick={() => setSearch("")} style={{
+              position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)",
+              background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)",
+              fontSize: 16, fontFamily: "inherit", padding: 0, lineHeight: 1,
+            }}>✕</button>
+          ) : (
+            <span style={{
+              position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+              color: "var(--text-faint)", fontSize: 14, pointerEvents: "none",
+            }}>🔍</span>
+          )}
+        </div>
       </div>
 
       {/* Column header */}
@@ -237,11 +272,12 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column" }}>
-        {leaderboard.map((entry, i) => {
+        {filtered.map((entry) => {
+          const origIndex = leaderboard.indexOf(entry);
           const isExp = expanded === entry.id;
-          const rank = getRank(i);
-          const isLeader = i === 0 && entry.complete && !allTied && entry.score > 0;
-          const isFirst = i === 0;
+          const rank = getRank(origIndex);
+          const isLeader = origIndex === 0 && entry.complete && !allTied && entry.score > 0;
+          const isFirst = origIndex === 0;
           return (
             <div key={entry.id} style={{
               borderBottom: "1px solid var(--border-light)",
