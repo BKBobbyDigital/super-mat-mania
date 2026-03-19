@@ -259,10 +259,12 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
               fontSize: 16, fontFamily: "inherit", padding: 0, lineHeight: 1,
             }}>✕</button>
           ) : (
-            <span style={{
+            <svg style={{
               position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
-              color: "var(--text-faint)", fontSize: 14, pointerEvents: "none",
-            }}>🔍</span>
+              pointerEvents: "none",
+            }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
           )}
         </div>
       </div>
