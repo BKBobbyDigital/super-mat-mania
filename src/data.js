@@ -1,4 +1,4 @@
-export const LAST_UPDATED = "2026-03-19T23:35:00Z";
+export const LAST_UPDATED = "2026-03-19T23:50:00Z";
 
 export const WEIGHT_CLASSES = [125, 133, 141, 149, 157, 165, 174, 184, 197, 285];
 
