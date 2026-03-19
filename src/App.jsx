@@ -108,6 +108,7 @@ export default function App() {
   const navItems = [
     { key: "leaderboard", label: "Leaderboard" },
     { key: "scoring", label: "Scoring" },
+    { key: "stats", label: "Stats" },
     { key: "payout", label: "Payout" },
     // { key: "addPick", label: "Add Entry" },
     ...(adminMode ? [{ key: "admin", label: "⚡ Admin" }] : []),
@@ -154,6 +155,7 @@ export default function App() {
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "32px 24px", flex: 1, width: "100%" }}>
         {view === "leaderboard" && <Leaderboard leaderboard={leaderboard} entries={entries} setEntries={setEntries} results={results} />}
         {view === "scoring" && <ScoringPage />}
+        {view === "stats" && <StatsPage entries={entries} />}
         {view === "payout" && <PayoutPage entries={entries} leaderboard={leaderboard} />}
         {view === "addPick" && <AddEntry entries={entries} setEntries={setEntries} onDone={() => setView("leaderboard")} />}
         {view === "admin" && adminMode && <AdminPanel entries={entries} results={results} setResults={setResultsAndSync} />}
@@ -467,6 +469,339 @@ function ScoringPage() {
         fontSize: 14, color: "var(--text-secondary)", textAlign: "center", border: "1px solid var(--border)",
       }}>
         <span style={{ fontWeight: 700 }}>Total Score</span> = sum of all 10 picks' (advancement + placement points)
+      </div>
+    </div>
+  );
+}
+
+// ─── Stats Page (Infographic) ───────────────────────────────────────────────
+function StatsPage({ entries }) {
+  // ── Compute all stats from picks data ──
+  const N = entries.length;
+  const wrestlerPicks = {};
+  const schoolPicks = {};
+  const weightFavorites = {};
+
+  entries.forEach(entry => {
+    Object.entries(entry.picks).forEach(([wt, p]) => {
+      const key = `${p.name}|${p.school}|${p.seed}`;
+      wrestlerPicks[key] = (wrestlerPicks[key] || 0) + 1;
+      schoolPicks[p.school] = (schoolPicks[p.school] || 0) + 1;
+      if (!weightFavorites[wt]) weightFavorites[wt] = {};
+      const wKey = `${p.name}|${p.school}`;
+      weightFavorites[wt][wKey] = (weightFavorites[wt][wKey] || 0) + 1;
+    });
+  });
+
+  // Top picked wrestlers
+  const topWrestlers = Object.entries(wrestlerPicks)
+    .map(([k, v]) => { const [name, school, seed] = k.split("|"); return { name, school, seed: +seed, count: v, pct: Math.round(v / N * 100) }; })
+    .sort((a, b) => b.count - a.count);
+
+  // Top schools
+  const topSchools = Object.entries(schoolPicks)
+    .map(([school, count]) => ({ school, count }))
+    .sort((a, b) => b.count - a.count);
+
+  // Lone wolves (picked by exactly 1 person)
+  const loneWolves = topWrestlers.filter(w => w.count === 1);
+
+  // Unpicked count
+  const pickedNames = new Set(topWrestlers.map(w => w.name));
+  let totalWrestlers = 0;
+  Object.values(WRESTLERS_BY_WEIGHT).forEach(wc => { totalWrestlers += wc.length; });
+  const unpickedCount = totalWrestlers - pickedNames.size;
+
+  // Weight class consensus + chaos
+  const weightStats = WEIGHT_CLASSES.map(wt => {
+    const picks = weightFavorites[wt] || {};
+    const sorted = Object.entries(picks).sort((a, b) => b[1] - a[1]);
+    const [topKey, topCount] = sorted[0] || ["Unknown|Unknown", 0];
+    const [topName, topSchool] = topKey.split("|");
+    return { weight: wt, topName, topSchool, topCount, pct: Math.round(topCount / N * 100), uniquePicks: sorted.length };
+  });
+  const mostAgreed = [...weightStats].sort((a, b) => b.pct - a.pct)[0];
+  const mostChaotic = [...weightStats].sort((a, b) => a.pct - b.pct)[0];
+
+  // Entry superlatives
+  let chalkiest = null, chalkSum = 999, wildest = null, wildSum = 0;
+  let mostContrarian = null, maxUniq = 0;
+  let biggestHomer = null, homerSchool = "", homerCount = 0;
+  let mostDiverse = null, maxSchools = 0;
+
+  entries.forEach(entry => {
+    const picks = Object.values(entry.picks);
+    const seedSum = picks.reduce((s, p) => s + p.seed, 0);
+    if (seedSum < chalkSum) { chalkSum = seedSum; chalkiest = entry.name; }
+    if (seedSum > wildSum) { wildSum = seedSum; wildest = entry.name; }
+
+    const uniq = picks.reduce((s, p) => {
+      const key = `${p.name}|${p.school}|${p.seed}`;
+      return s + (1 / (wrestlerPicks[key] || 1));
+    }, 0);
+    if (uniq > maxUniq) { maxUniq = uniq; mostContrarian = entry.name; }
+
+    const sc = {};
+    picks.forEach(p => sc[p.school] = (sc[p.school] || 0) + 1);
+    const schools = Object.keys(sc).length;
+    if (schools > maxSchools) { maxSchools = schools; mostDiverse = entry.name; }
+    const topSc = Object.entries(sc).sort((a, b) => b[1] - a[1])[0];
+    if (topSc && topSc[1] > homerCount) { homerCount = topSc[1]; homerSchool = topSc[0]; biggestHomer = entry.name; }
+  });
+
+  // Seed distribution for chart
+  const seedDist = {};
+  entries.forEach(e => Object.values(e.picks).forEach(p => { seedDist[p.seed] = (seedDist[p.seed] || 0) + 1; }));
+  const maxSeedCount = Math.max(...Object.values(seedDist));
+
+  // ── Reusable sub-components ──
+  const StatCard = ({ value, label, sub, accent }) => (
+    <div style={{
+      background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 14,
+      padding: "20px 16px", textAlign: "center", flex: 1, minWidth: 140,
+    }}>
+      <div style={{ fontSize: 36, fontWeight: 900, color: accent ? "var(--accent)" : "var(--text)", lineHeight: 1, marginBottom: 4 }}>{value}</div>
+      <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-body)", marginBottom: 2 }}>{label}</div>
+      {sub && <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{sub}</div>}
+    </div>
+  );
+
+  const SectionTitle = ({ icon, title }) => (
+    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, marginTop: 36 }}>
+      <span style={{ fontSize: 22 }}>{icon}</span>
+      <h3 style={{ fontWeight: 800, fontSize: 18, letterSpacing: -0.3, color: "var(--text)" }}>{title}</h3>
+    </div>
+  );
+
+  const BarRow = ({ label, sub, value, maxValue, color, suffix = "" }) => (
+    <div style={{ marginBottom: 10 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+        <div>
+          <span style={{ fontWeight: 600, fontSize: 14, color: "var(--text)" }}>{label}</span>
+          {sub && <span style={{ fontSize: 12, color: "var(--text-muted)", marginLeft: 6 }}>{sub}</span>}
+        </div>
+        <span style={{ fontWeight: 700, fontSize: 14, color: color || "var(--accent)" }}>{value}{suffix}</span>
+      </div>
+      <div style={{ height: 8, borderRadius: 4, background: "var(--bg-tertiary)", overflow: "hidden" }}>
+        <div style={{
+          height: "100%", borderRadius: 4,
+          background: color || "var(--accent)",
+          width: `${Math.max((value / maxValue) * 100, 2)}%`,
+          transition: "width 0.6s ease",
+        }} />
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{ maxWidth: 720, margin: "0 auto" }}>
+      {/* Hero header */}
+      <div style={{
+        background: `linear-gradient(135deg, var(--payout-grad-start) 0%, var(--payout-grad-end) 100%)`,
+        borderRadius: 16, padding: "32px 28px", marginBottom: 8, textAlign: "center",
+        border: "1px solid var(--payout-border)",
+      }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--accent)", letterSpacing: 2, marginBottom: 10, textTransform: "uppercase" }}>
+          The Numbers
+        </div>
+        <div style={{ fontSize: 42, fontWeight: 900, color: "#fff", lineHeight: 1, marginBottom: 6 }}>
+          By The Data
+        </div>
+        <div style={{ fontSize: 14, color: "var(--text-secondary)" }}>
+          {N} entries · {N * 10} total picks · {totalWrestlers} wrestlers in the field
+        </div>
+      </div>
+
+      {/* Big number cards */}
+      <div style={{ display: "flex", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
+        <StatCard value={N} label="Entries" sub="$20 each" />
+        <StatCard value={N * 10} label="Picks Made" sub="10 per entry" accent />
+        <StatCard value={unpickedCount} label="Unpicked" sub={`of ${totalWrestlers} wrestlers`} />
+      </div>
+      <div style={{
+        background: "var(--accent-bg)", borderRadius: 10, padding: "10px 16px",
+        fontSize: 13, color: "var(--accent-dark)", textAlign: "center", border: "1px solid var(--accent-border)",
+        fontWeight: 600, marginBottom: 0,
+      }}>
+        {Math.round(unpickedCount / totalWrestlers * 100)}% of the bracket is getting no love — {unpickedCount} wrestlers with zero picks
+      </div>
+
+      {/* ── Most Popular Picks ── */}
+      <SectionTitle icon="🔥" title="Most Popular Picks" />
+      <div style={{
+        background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 14, padding: "20px 20px 12px",
+      }}>
+        {topWrestlers.slice(0, 10).map((w, i) => (
+          <div key={i} style={{
+            display: "flex", alignItems: "center", gap: 12, padding: "10px 0",
+            borderBottom: i < 9 ? "1px solid var(--border-light)" : "none",
+          }}>
+            <div style={{
+              width: 28, height: 28, borderRadius: "50%",
+              background: i < 3 ? "var(--accent)" : "var(--bg-tertiary)",
+              color: i < 3 ? "#fff" : "var(--text-muted)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 12, fontWeight: 800, flexShrink: 0,
+            }}>{i + 1}</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontWeight: 700, fontSize: 14, color: "var(--text)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {w.name}
+              </div>
+              <div style={{ fontSize: 12, color: "var(--text-muted)" }}>{w.school} · Seed #{w.seed}</div>
+            </div>
+            <div style={{ textAlign: "right", flexShrink: 0 }}>
+              <div style={{ fontWeight: 800, fontSize: 16, color: "var(--accent)" }}>{w.pct}%</div>
+              <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{w.count}/{N}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Weight Class Breakdown ── */}
+      <SectionTitle icon="⚖️" title="Weight Class Breakdown" />
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }} className="scoring-grid">
+        {weightStats.map(ws => (
+          <div key={ws.weight} style={{
+            background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 12, padding: "14px 16px",
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <span style={{ fontWeight: 800, fontSize: 16, color: "var(--accent)" }}>{ws.weight}lb</span>
+              <span style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 500 }}>{ws.uniquePicks} different picks</span>
+            </div>
+            <div style={{ fontWeight: 700, fontSize: 13, color: "var(--text)", marginBottom: 2 }}>{ws.topName}</div>
+            <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 8 }}>{ws.topSchool}</div>
+            <div style={{ height: 6, borderRadius: 3, background: "var(--bg-tertiary)", overflow: "hidden" }}>
+              <div style={{
+                height: "100%", borderRadius: 3, background: "var(--accent)",
+                width: `${ws.pct}%`, transition: "width 0.6s ease",
+              }} />
+            </div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", marginTop: 4 }}>{ws.pct}% of entries</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Consensus vs chaos callout */}
+      <div style={{ display: "flex", gap: 10, marginTop: 12, flexWrap: "wrap" }}>
+        <div style={{
+          flex: 1, minWidth: 200, background: "var(--accent-bg)", borderRadius: 12, padding: "16px 18px",
+          border: "1px solid var(--accent-border)",
+        }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--accent-dark)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Most Agreed</div>
+          <div style={{ fontWeight: 800, fontSize: 20, color: "var(--text)" }}>{mostAgreed.weight}lb</div>
+          <div style={{ fontSize: 13, color: "var(--text-body)" }}>{mostAgreed.topName} — <strong>{mostAgreed.pct}%</strong> consensus</div>
+        </div>
+        <div style={{
+          flex: 1, minWidth: 200, background: "var(--danger-bg)", borderRadius: 12, padding: "16px 18px",
+          border: "1px solid var(--danger-border)",
+        }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--danger)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Most Chaotic</div>
+          <div style={{ fontWeight: 800, fontSize: 20, color: "var(--text)" }}>{mostChaotic.weight}lb</div>
+          <div style={{ fontSize: 13, color: "var(--text-body)" }}>Only <strong>{mostChaotic.pct}%</strong> on the fav · {mostChaotic.uniquePicks} different picks</div>
+        </div>
+      </div>
+
+      {/* ── School Loyalty ── */}
+      <SectionTitle icon="🏫" title="School Loyalty" />
+      <div style={{
+        background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 14, padding: "20px 20px 12px",
+      }}>
+        {topSchools.slice(0, 10).map((s, i) => (
+          <BarRow key={i} label={s.school} value={s.count} maxValue={topSchools[0].count} suffix=" picks" />
+        ))}
+      </div>
+
+      {/* ── Seed Distribution ── */}
+      <SectionTitle icon="🎲" title="Seed Distribution" />
+      <div style={{
+        background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 14, padding: "20px 20px 12px",
+      }}>
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 120, marginBottom: 8 }}>
+          {Array.from({ length: 33 }, (_, i) => i + 1).map(seed => {
+            const count = seedDist[seed] || 0;
+            const height = count > 0 ? Math.max((count / maxSeedCount) * 100, 3) : 0;
+            return (
+              <div key={seed} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <div style={{
+                  width: "100%", maxWidth: 16, borderRadius: "3px 3px 0 0",
+                  height: `${height}%`, minHeight: count > 0 ? 3 : 0,
+                  background: seed <= 4 ? "var(--accent)" : seed >= 15 ? "var(--danger)" : "var(--text-faint)",
+                  transition: "height 0.6s ease",
+                }} />
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "var(--text-muted)", fontWeight: 500 }}>
+          <span>Seed 1</span>
+          <span>Seed 10</span>
+          <span>Seed 20</span>
+          <span>Seed 33</span>
+        </div>
+        <div style={{ display: "flex", gap: 16, marginTop: 12, justifyContent: "center", fontSize: 12, color: "var(--text-muted)" }}>
+          <span><span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 2, background: "var(--accent)", marginRight: 4, verticalAlign: -1 }} />Chalk (1-4)</span>
+          <span><span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 2, background: "var(--text-faint)", marginRight: 4, verticalAlign: -1 }} />Mid (5-14)</span>
+          <span><span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 2, background: "var(--danger)", marginRight: 4, verticalAlign: -1 }} />Upset (15+)</span>
+        </div>
+      </div>
+
+      {/* ── Superlatives ── */}
+      <SectionTitle icon="🏅" title="Entry Superlatives" />
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }} className="scoring-grid">
+        {[
+          { title: "Chalkiest", name: chalkiest, detail: `Avg seed ${(chalkSum / 10).toFixed(1)}`, icon: "📋", color: "var(--accent)" },
+          { title: "Upset Hunter", name: wildest, detail: `Avg seed ${(wildSum / 10).toFixed(1)}`, icon: "🎰", color: "var(--danger)" },
+          { title: "Most Contrarian", name: mostContrarian, detail: "Most unique combo", icon: "🦄", color: "#a855f7" },
+          { title: "Biggest Homer", name: biggestHomer, detail: `${homerCount} picks from ${homerSchool}`, icon: "🏠", color: "#f59e0b" },
+        ].map((s, i) => (
+          <div key={i} style={{
+            background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 12,
+            padding: "18px 16px", display: "flex", alignItems: "flex-start", gap: 12,
+          }}>
+            <div style={{ fontSize: 28, lineHeight: 1 }}>{s.icon}</div>
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: s.color, textTransform: "uppercase", letterSpacing: 1, marginBottom: 2 }}>{s.title}</div>
+              <div style={{ fontWeight: 800, fontSize: 16, color: "var(--text)", lineHeight: 1.2 }}>{s.name}</div>
+              <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{s.detail}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Lone Wolves ── */}
+      <SectionTitle icon="🐺" title="Lone Wolf Picks" />
+      <div style={{
+        background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 14, padding: "16px 20px",
+      }}>
+        <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 12 }}>
+          <strong style={{ color: "var(--text)" }}>{loneWolves.length} wrestlers</strong> picked by exactly one person. High risk, high reward.
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+          {loneWolves.map((w, i) => (
+            <span key={i} style={{
+              display: "inline-flex", alignItems: "center", gap: 4,
+              background: "var(--bg-tertiary)", border: "1px solid var(--border)",
+              borderRadius: 20, padding: "5px 12px", fontSize: 12, fontWeight: 600, color: "var(--text-body)",
+            }}>
+              <span style={{
+                width: 18, height: 18, borderRadius: "50%", background: "var(--danger)",
+                color: "#fff", fontSize: 9, fontWeight: 800,
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+              }}>#{w.seed}</span>
+              {w.name}
+              <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>{w.school}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Most Diverse ── */}
+      <div style={{
+        marginTop: 16, marginBottom: 32, background: "var(--accent-bg)", borderRadius: 10, padding: "14px 20px",
+        fontSize: 13, color: "var(--accent-dark)", textAlign: "center", border: "1px solid var(--accent-border)",
+        fontWeight: 600,
+      }}>
+        🌍 Most School Diversity: <strong>{mostDiverse}</strong> — all {maxSchools} picks from different schools
       </div>
     </div>
   );
