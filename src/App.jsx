@@ -438,7 +438,7 @@ function ScoringPage() {
       {/* Advancement Points */}
       <div style={{ background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 12, padding: 28, marginBottom: 16 }}>
         <h3 style={{ fontWeight: 700, fontSize: 16, color: "var(--text)", marginBottom: 4 }}>Advancement Points</h3>
-        <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 20 }}>Earned each round a picked wrestler wins</p>
+        <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 20 }}>Base points per win + bonus for dominant victories</p>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
           <thead>
             <tr style={{ borderBottom: "1px solid var(--border)" }}>
@@ -449,15 +449,14 @@ function ScoringPage() {
           </thead>
           <tbody>
             {[
-              ["Regular Decision", "1.0", "0.5"],
-              ["Fall / Forfeit / Default / DQ", "2.0", "2.0"],
-              ["Tech Fall (with nearfall)", "1.5", "1.5"],
-              ["Tech Fall (no nearfall)", "1.0", "1.0"],
-              ["Major Decision", "1.0", "1.0"],
-              ["Bye", "1.0", "0.5"],
-            ].map(([type, champ, consi], i) => (
+              ["Regular Decision", "1.0", "0.5", null],
+              ["Major Decision", "2.0", "1.5", "+1.0 bonus"],
+              ["Tech Fall (no nearfall)", "2.0", "1.5", "+1.0 bonus"],
+              ["Tech Fall (with nearfall)", "2.5", "2.0", "+1.5 bonus"],
+              ["Fall / Forfeit / Default / DQ", "3.0", "2.5", "+2.0 bonus"],
+            ].map(([type, champ, consi, bonus], i) => (
               <tr key={i} style={{ borderBottom: "1px solid var(--border-light)" }}>
-                <td style={{ padding: "12px", color: "var(--text-body)", fontWeight: 500 }}>{type}</td>
+                <td style={{ padding: "12px", color: "var(--text-body)", fontWeight: 500 }}>{type}{bonus && <span style={{ fontSize: 11, color: "var(--accent-text)", marginLeft: 6 }}>{bonus}</span>}</td>
                 <td style={{ padding: "12px", textAlign: "center", fontWeight: 700, color: "var(--accent)" }}>{champ}</td>
                 <td style={{ padding: "12px", textAlign: "center", fontWeight: 600, color: "var(--text-secondary)" }}>{consi}</td>
               </tr>
@@ -1251,15 +1250,18 @@ function calcAdvPoints(wins) {
   let total = 0;
   for (const win of wins) {
     const isChamp = win.bracket === "champ";
+    // Base points: 1.0 championship, 0.5 consolation
+    const base = isChamp ? 1.0 : 0.5;
+    // Bonus points for win type (same in both brackets)
+    let bonus = 0;
     switch (win.type) {
-      case "decision": total += isChamp ? 1.0 : 0.5; break;
-      case "major": total += 1.0; break;
-      case "tech": total += 1.5; break;
-      case "tech_nf": total += 1.0; break;
-      case "fall": total += 2.0; break;
-      case "bye": total += isChamp ? 1.0 : 0.5; break;
-      default: break;
+      case "fall": bonus = 2.0; break;
+      case "tech": bonus = 1.5; break;
+      case "tech_nf": bonus = 1.0; break;
+      case "major": bonus = 1.0; break;
+      default: break; // regular decision = no bonus
     }
+    total += base + bonus;
   }
   return total;
 }
