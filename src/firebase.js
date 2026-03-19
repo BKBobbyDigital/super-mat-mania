@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyATKr7LoBd4T4l93xi3VAOzfZcMdZG-mmo",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "super-mat-mania.firebaseapp.com",
   databaseURL: "https://super-mat-mania-default-rtdb.firebaseio.com",
   projectId: "super-mat-mania",
