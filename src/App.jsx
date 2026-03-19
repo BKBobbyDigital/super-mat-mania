@@ -152,6 +152,14 @@ export default function App() {
         </div>
       </header>
 
+      <div style={{
+        background: "var(--accent-bg)", borderBottom: "1px solid var(--accent-border)",
+        padding: "6px 24px", textAlign: "center", fontSize: 12, fontWeight: 600,
+        color: "var(--accent-text)", letterSpacing: 0.3,
+      }}>
+        Last updated: {new Date(LAST_UPDATED).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+      </div>
+
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "32px 24px", flex: 1, width: "100%" }}>
         {view === "leaderboard" && <Leaderboard leaderboard={leaderboard} entries={entries} setEntries={setEntries} results={results} />}
         {view === "scoring" && <ScoringPage />}
