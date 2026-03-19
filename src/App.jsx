@@ -118,19 +118,19 @@ export default function App() {
       {/* Header */}
       <header style={{ borderBottom: "1px solid var(--border)", background: "var(--bg)", position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px" }}>
-          <div className="header-top" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 72 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div className="header-top" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 82 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
               <div onClick={handleIconClick} style={{
-                width: 48, height: 48, borderRadius: 12, background: "var(--accent)",
+                width: 54, height: 54, borderRadius: 14, background: "var(--accent)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 cursor: "pointer", userSelect: "none",
               }}>
-                <WrestlingIcon color="#fff" size={30} />
+                <WrestlingIcon color="#fff" size={34} />
               </div>
               <div>
-                <div style={{ fontWeight: 800, fontSize: 18, letterSpacing: -0.5, lineHeight: 1.1, color: "var(--text)" }}>Super Mat Mania</div>
-                <div style={{ fontWeight: 600, fontSize: 11, color: "var(--accent)", letterSpacing: 0.5, lineHeight: 1.3 }}>The Poppy Challenge 2026</div>
-                <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 500, lineHeight: 1.3 }}>Mar 19–21 · Rocket Arena, Cleveland OH</div>
+                <div style={{ fontWeight: 800, fontSize: 24, letterSpacing: -0.5, lineHeight: 1.1, color: "var(--text)" }}>Super Mat Mania</div>
+                <div style={{ fontWeight: 600, fontSize: 14, color: "var(--accent)", letterSpacing: 0.5, lineHeight: 1.4 }}>The Poppy Challenge 2026</div>
+                <div style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 500, lineHeight: 1.4 }}>Mar 19–21 · Rocket Arena, Cleveland OH</div>
               </div>
             </div>
             <nav className="header-nav" style={{ display: "flex", gap: 2 }}>
@@ -445,8 +445,8 @@ function ScoringPage() {
         <h3 style={{ fontWeight: 700, fontSize: 16, color: "var(--text)", marginBottom: 16 }}>Pick Rules</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 14, fontSize: 14, color: "var(--text-body)" }}>
           {[
-            ["1", "Pick one wrestler per weight class (10 picks total)", "#00d26a"],
-            ["2", "Must include at least one wrestler seeded #1\u20139 (chalk pick)", "#00d26a"],
+            ["1", "Pick one wrestler per weight class (10 picks total)", "#00c48c"],
+            ["2", "Must include at least one wrestler seeded #1\u20139 (chalk pick)", "#00c48c"],
             ["3", "Must include at least one wrestler seeded #10 or higher (upset pick)", "#ef4444"],
           ].map(([num, text, bg]) => (
             <div key={num} style={{ display: "flex", gap: 12, alignItems: "center" }}>
