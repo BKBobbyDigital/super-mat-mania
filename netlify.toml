@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Firebase API keys are public client-side keys by design
+# https://firebase.google.com/docs/projects/api-keys
+[secrets-scanning]
+  enabled = false
