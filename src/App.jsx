@@ -157,7 +157,7 @@ export default function App() {
         padding: "6px 24px", textAlign: "center", fontSize: 12, fontWeight: 600,
         color: "var(--accent-text)", letterSpacing: 0.3,
       }}>
-        Last updated: {new Date(LAST_UPDATED).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+        Last updated: {new Date(LAST_UPDATED).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/New_York" })} ET
       </div>
 
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "32px 24px", flex: 1, width: "100%" }}>
@@ -174,7 +174,7 @@ export default function App() {
         textAlign: "center", fontSize: 13, color: "var(--text-muted)", fontWeight: 400,
         display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
       }}>
-        <div>Last updated: {new Date(LAST_UPDATED).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</div>
+        <div>Last updated: {new Date(LAST_UPDATED).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/New_York" })} ET</div>
         <div>&copy; 2026 WE DEM BOYZ</div>
       </footer>
     </div>
