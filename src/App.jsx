@@ -84,9 +84,11 @@ export default function App() {
   useEffect(() => { localStorage.setItem("ncaa_wres_entries", JSON.stringify(entries)); }, [entries]);
 
   const allPickedFn = (picks) => WEIGHT_CLASSES.every(w => !!picks[w]);
+  const hasAnyResults = Object.keys(results).length > 0;
   const leaderboard = [...entries]
     .map(e => ({ ...e, score: calcTeamPoints(e.picks, results), complete: allPickedFn(e.picks) }))
     .sort((a, b) => {
+      if (!hasAnyResults) return a.name.localeCompare(b.name);
       if (a.complete !== b.complete) return a.complete ? -1 : 1;
       return b.score - a.score;
     });
