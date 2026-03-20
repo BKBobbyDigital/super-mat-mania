@@ -186,7 +186,6 @@ export default function App() {
 // ─── Leaderboard ─────────────────────────────────────────────────────────────
 function Leaderboard({ leaderboard, entries, setEntries, results }) {
   const [expanded, setExpanded] = useState(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [search, setSearch] = useState("");
 
   const allPicked = (picks) => WEIGHT_CLASSES.every(w => !!picks[w]);
@@ -396,27 +395,6 @@ function Leaderboard({ leaderboard, entries, setEntries, results }) {
                         </div>
                       );
                     })}
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    {deleteConfirm === entry.id ? (
-                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                        <span style={{ fontSize: 13, color: "var(--danger)" }}>Delete this entry?</span>
-                        <button onClick={() => { setEntries(entries.filter(e => e.id !== entry.id)); setDeleteConfirm(null); setExpanded(null); }} style={{
-                          padding: "6px 14px", borderRadius: 8, background: "var(--danger)", border: "none",
-                          color: "#fff", fontSize: 13, cursor: "pointer", fontWeight: 600, fontFamily: "inherit",
-                        }}>Delete</button>
-                        <button onClick={() => setDeleteConfirm(null)} style={{
-                          padding: "6px 14px", borderRadius: 8, background: "var(--card-bg)", border: "1px solid var(--border)",
-                          color: "var(--text-secondary)", fontSize: 13, cursor: "pointer", fontFamily: "inherit",
-                        }}>Cancel</button>
-                      </div>
-                    ) : (
-                      <button onClick={(e) => { e.stopPropagation(); setDeleteConfirm(entry.id); }} style={{
-                        padding: "6px 14px", borderRadius: 8, background: "transparent", border: "1px solid var(--border)",
-                        color: "var(--text-muted)", fontSize: 13, cursor: "pointer", fontFamily: "inherit",
-                        transition: "all .15s",
-                      }}>Remove</button>
-                    )}
                   </div>
                 </div>
               )}
